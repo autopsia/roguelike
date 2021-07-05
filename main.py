@@ -26,7 +26,7 @@ def main() -> None:
 
     room_max_size = 10
     room_min_size = 6
-    max_rooms = 30
+    max_rooms = 99
 
     max_monsters_per_room = 3
 
@@ -49,13 +49,12 @@ def main() -> None:
     )
     engine.update_fov()
 
-
     with tcod.context.new_terminal(
-        screen_width,
-        screen_height,
-        tileset=tileset,
-        title="Roguelike",
-        vsync=True,
+            screen_width,
+            screen_height,
+            tileset=tileset,
+            title="Roguelike",
+            vsync=True,
     ) as context:
         root_console = tcod.Console(screen_width, screen_height, order="F")
         while True:

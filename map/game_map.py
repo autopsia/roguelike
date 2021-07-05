@@ -4,6 +4,7 @@ from typing import Iterable, TYPE_CHECKING, Optional
 import numpy as np
 from tcod import Console
 from map import tile_types
+from object.entity import Actor
 
 if TYPE_CHECKING:
     from engine import Engine
@@ -20,6 +21,15 @@ class GameMap:
         self.visible = np.full((width, height), fill_value=False, order="F")
         self.explored = np.full((width, height), fill_value=False, order="F")
 
+    @property
+    def actors(self) -> Iterable[Actor]:
+        """ Iterates over the map's living actors """
+        yield from (
+            entity
+            for entity in self.entities
+            if isinstance(entity, Actor) and entity.is_alive
+        )
+
     def get_blocking_entity_at_location(
             self, location_x: int, location_y: int
     ) -> Optional[Entity]:
@@ -30,6 +40,13 @@ class GameMap:
                 and entity.y == location_y
             ):
                 return entity
+
+        return None
+
+    def get_actor_at_location(self, x: int, y: int) -> Optional[Actor]:
+        for actor in self.actors:
+            if actor.x == x and actor.y == y:
+                return actor
 
         return None
 
@@ -48,9 +65,18 @@ class GameMap:
             default=tile_types.SHROUD,
         )
 
-        for entity in self.entities:
+        entities_sorted_for_rendering = sorted(
+            self.entities, key=lambda x: x.render_order.value
+        )
+
+        for entity in entities_sorted_for_rendering:
             if self.visible[entity.x, entity.y]:
-                console.print(x=entity.x, y=entity.y, string=entity.char, fg=entity.color)
+                console.print(
+                    x=entity.x,
+                    y=entity.y,
+                    string=entity.char,
+                    fg=entity.color
+                )
 
 
 
