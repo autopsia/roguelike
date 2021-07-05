@@ -2,6 +2,8 @@
 import copy
 
 import tcod
+
+import color
 from engine import Engine
 
 # Press ⌃R to execute it or replace it with your code.
@@ -22,7 +24,7 @@ def main() -> None:
     screen_height = 50
 
     map_width = 80
-    map_height = 45
+    map_height = 43
 
     room_max_size = 10
     room_min_size = 6
@@ -48,6 +50,10 @@ def main() -> None:
         engine=engine,
     )
     engine.update_fov()
+
+    engine.message_log.add_message(
+        "Welcome to generic roguelike game", color.welcome_text,
+    )
 
     with tcod.context.new_terminal(
             screen_width,
