@@ -24,6 +24,7 @@ class Message:
             return f"{self.plain_text} (x{self.count})"
         return self.plain_text
 
+
 class MessageLog:
     """ Keeps a list of messages to display """
     def __init__(self) -> None:

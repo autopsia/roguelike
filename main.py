@@ -55,17 +55,19 @@ def main() -> None:
         "Welcome to generic roguelike game", color.welcome_text,
     )
 
-    with tcod.context.new_terminal(
-            screen_width,
-            screen_height,
+    with tcod.context.new(
+            columns=screen_width,
+            rows=screen_height,
             tileset=tileset,
             title="Roguelike",
             vsync=True,
     ) as context:
         root_console = tcod.Console(screen_width, screen_height, order="F")
         while True:
-            engine.render(console=root_console, context=context)
-            engine.event_handler.handle_events()
+            root_console.clear()
+            engine.event_handler.on_render(console=root_console)
+            context.present(root_console)
+            engine.event_handler.handle_events(context)
 
 
 # Press the green button in the gutter to run the script.
