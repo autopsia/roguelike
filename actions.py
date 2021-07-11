@@ -4,10 +4,11 @@ import random
 from typing import TYPE_CHECKING, Tuple, Optional
 
 import color
+from exceptions import Impossible
 
 if TYPE_CHECKING:
     from engine import Engine
-    from object.entity import Entity, Actor
+    from object.entity import Entity, Actor, Item
 
 MELEE_ATTACKS = ["punch", "kick"]
 
@@ -27,6 +28,25 @@ class Action:
         """
         raise NotImplementedError()
 
+
+class ItemAction(Action):
+    def __init__(
+        self, entity: Actor, item: Item, target_xy: Optional[Tuple[int, int]] = None
+    ):
+        super().__init__(entity)
+        self.item = item
+        if not target_xy:
+            target_xy = entity.x, entity.y
+        self.target_xy = target_xy
+
+    @property
+    def target_actor(self) -> Optional[Actor]:
+        """ Returns the actor at this action's destination """
+        return self.engine.game_map.get_actor_at_location(*self.target_xy)
+
+    def perform(self) -> None:
+        """ Invokes the items' ability """
+        self.item.consumable.activate(self)
 
 class EscapeAction(Action):
     pass
@@ -70,7 +90,7 @@ class MeleeAction(ActionWithDirection):
     def perform(self) -> None:
         target = self.target_actor
         if not target:
-            return  # No entity to attack
+            raise Impossible("Nothing to attack.")
 
         damage = self.entity.fighter.power - target.fighter.defense
 
@@ -99,11 +119,14 @@ class MovementAction(ActionWithDirection):
         dest_x, dest_y = self.dest_xy
 
         if not self.engine.game_map.in_bounds(dest_x, dest_y):
-            return  # Entity out of bounds
+            # Entity out of bounds
+            raise Impossible("That way is blocked.")
         if not self.engine.game_map.tiles["walkable"][dest_x, dest_y]:
-            return  # Entity is not in walkable terrain
+            # Entity is not in walkable terrain
+            raise Impossible("That way is blocked.")
         if self.engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
-            return  # Entity is being blocked by another
+            # Entity is being blocked by another
+            raise Impossible("That way is blocked.")
 
         self.entity.move(self.dx, self.dy)
 

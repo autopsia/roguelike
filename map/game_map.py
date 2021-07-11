@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Iterable, TYPE_CHECKING, Optional
+from typing import Iterable, TYPE_CHECKING, Optional, Iterator
 
 import numpy as np
 from tcod import Console
@@ -12,7 +12,9 @@ if TYPE_CHECKING:
 
 
 class GameMap:
-    def __init__(self, engine: Engine, width: int, height: int, entities: Iterable[Entity] = ()):
+    def __init__(
+        self, engine: Engine, width: int, height: int, entities: Iterable[Entity] = ()
+    ):
         self.engine = engine
         self.height, self.width = height, width
         self.entities = set(entities)
@@ -26,7 +28,7 @@ class GameMap:
         return self
 
     @property
-    def actors(self) -> Iterable[Actor]:
+    def actors(self) -> Iterator[Actor]:
         """ Iterates over the map's living actors """
         yield from (
             entity
