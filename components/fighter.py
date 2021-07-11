@@ -8,7 +8,7 @@ from render_order import RenderOrder
 from input_handlers import GameOverEventHandler
 
 if TYPE_CHECKING:
-    from object.entity import Actor
+    from entity import Actor
 
 
 class Fighter(BaseComponent):

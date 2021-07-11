@@ -1,4 +1,4 @@
-from typing import List, Tuple, TYPE_CHECKING
+from typing import List, Tuple
 
 import numpy as np
 import tcod.path
@@ -6,7 +6,7 @@ import tcod.path
 from actions import Action, MeleeAction, MovementAction, WaitAction
 
 #if TYPE_CHECKING:
-from object.entity import Actor
+from entity import Actor
 
 
 class BaseAI(Action):

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from engine import Engine
-    from object.entity import Entity
+    from entity import Entity
     from map.game_map import GameMap
 
 

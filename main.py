@@ -10,9 +10,7 @@ from engine import Engine
 # Press ⌃R to execute it or replace it with your code.
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 from map.procgen import generate_dungeon
-from object import entity_factories
-from object.entity import Entity
-from map.game_map import GameMap
+import entity_factories
 
 
 def print_hi(name):

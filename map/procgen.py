@@ -6,7 +6,7 @@ import tcod
 
 from map import tile_types
 from map.game_map import GameMap
-from object import entity_factories
+import entity_factories
 from engine import Engine
 
 

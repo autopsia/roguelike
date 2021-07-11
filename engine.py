@@ -10,7 +10,7 @@ from message_log import MessageLog
 from render_functions import render_bar, render_names_at_mouse_location
 
 if TYPE_CHECKING:
-    from object.entity import Actor
+    from entity import Actor
     from map.game_map import GameMap
     from input_handlers import EventHandler
 

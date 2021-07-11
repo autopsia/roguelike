@@ -8,7 +8,7 @@ from exceptions import Impossible
 
 if TYPE_CHECKING:
     from engine import Engine
-    from object.entity import Entity, Actor, Item
+    from entity import Entity, Actor, Item
 
 MELEE_ATTACKS = ["punch", "kick"]
 
@@ -27,6 +27,32 @@ class Action:
         Must be implemented by classes extending this class
         """
         raise NotImplementedError()
+
+
+class PickupAction(Action):
+    """Pickup an item and add it to the inventory, if there is room for it."""
+
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+
+    def perform(self) -> None:
+        actor_location_x = self.entity.x
+        actor_location_y = self.entity.y
+        inventory = self.entity.inventory
+
+        for item in self.engine.game_map.items:
+            if actor_location_x == item.x and actor_location_y == item.y:
+                if len(inventory.items) >= inventory.capacity:
+                    raise Impossible("Your inventory is full.")
+
+                self.engine.game_map.entities.remove(item)
+                item.parent = self.entity.inventory
+                inventory.items.append(item)
+
+                self.engine.message_log.add_message(f"You picked up the {item.name}!")
+                return
+
+        raise Impossible("There is nothing here to pick up.")
 
 
 class ItemAction(Action):
@@ -48,11 +74,10 @@ class ItemAction(Action):
         """ Invokes the items' ability """
         self.item.consumable.activate(self)
 
-class EscapeAction(Action):
-    pass
 
+class DropItem(ItemAction):
     def perform(self) -> None:
-        raise SystemExit()
+        self.entity.inventory.drop(self.item)
 
 
 class WaitAction(Action):
